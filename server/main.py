@@ -1,34 +1,37 @@
 from http.client import HTTPException
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.exc import SQLAlchemyError
-import os
+from sqlalchemy.ext.asyncio import AsyncSession
 
-app = FastAPI()
+from core.config import get_config
+from database.session import get_db
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_async_engine(DATABASE_URL)
+config = get_config()
 
-async def check_db_tables():
-    async with engine.connect() as conn:
-        result = await conn.execute(
-            text(
-                """
-                SELECT tablename
-                FROM pg_catalog.pg_tables
-                WHERE schemaname = 'public';
-                """
-            )
+app = FastAPI(
+    title=config.APP_NAME,
+    debug=config.DEBUG
+)
+
+async def check_db_tables(db: AsyncSession):
+    result = await db.execute(
+        text(
+            """
+            SELECT tablename
+            FROM pg_catalog.pg_tables
+            WHERE schemaname = 'public';
+            """
         )
+    )
 
-        tables = [row[0] for row in result.fetchall()]
-        return tables
+    tables = [row[0] for row in result.fetchall()]
+    return tables
 
 @app.get("/db")
-async def db_health_check():
+async def db_health_check(db: AsyncSession = Depends(get_db)):
     try:
-        tables = await check_db_tables()
+        tables = await check_db_tables(db)
         return {
             "status": "ok",
             "database": "connected",

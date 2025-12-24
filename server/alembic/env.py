@@ -4,11 +4,12 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-from models.models import Base
 
 import asyncio
 import os
 from dotenv import load_dotenv
+
+from models import Base
 
 load_dotenv()
 
