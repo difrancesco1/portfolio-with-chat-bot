@@ -7,12 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.config import get_config
 from database.session import get_db
 
+from api.routers.portfolio import router as portfolio_router
+
 config = get_config()
 
 app = FastAPI(
     title=config.APP_NAME,
-    debug=config.DEBUG
+    debug=config.DEBUG,
 )
+app.include_router(portfolio_router)
 
 async def check_db_tables(db: AsyncSession):
     result = await db.execute(

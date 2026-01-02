@@ -1,14 +1,26 @@
+import uuid
 from models import Base
 
-from datetime import datetime
-from sqlalchemy import DateTime, Float, ForeignKey, func, String, Text
+from datetime import date
+from sqlalchemy import Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.dialects.postgresql import UUID
 
 class Portfolio(Base):
     __tablename__ = "portfolio"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String, unique=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+    pid: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        unique=True,
+        nullable=False,
+        default=uuid.uuid4,
+        index=True
+    )
+    email: Mapped[str] = mapped_column(String(64), unique=True)
 
     education: Mapped[list["Education"]] = relationship(
         back_populates="portfolio",
@@ -29,7 +41,17 @@ class Portfolio(Base):
 class Education(Base):
     __tablename__ = "education"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+    pid: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        unique=True,
+        nullable=False,
+        default=uuid.uuid4,
+        index=True
+    )
     portfolio_id: Mapped[int] = mapped_column(
         ForeignKey("portfolio.id", ondelete="CASCADE"),
         nullable=False
@@ -37,44 +59,55 @@ class Education(Base):
 
     major: Mapped[str] = mapped_column(String(64), nullable=False)
     degree: Mapped[str] = mapped_column(String(64), nullable=False)
-    gpa: Mapped[float] = mapped_column(Float(precision=2))
+    gpa: Mapped[float] = mapped_column(Float(precision=2), nullable=True)
 
-    start_date: Mapped[datetime] = mapped_column (
-        DateTime(timezone=True),
-        nullable=False
-    )
-    end_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-    )
+    start_date: Mapped[date] = mapped_column (nullable=False)
+    end_date: Mapped[date] = mapped_column(nullable=True)
 
     portfolio: Mapped["Portfolio"] = relationship(back_populates="education")
 
 class Employment(Base):
     __tablename__ = "employment"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+    pid: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        unique=True,
+        nullable=False,
+        default=uuid.uuid4,
+        index=True
+    )
     portfolio_id: Mapped[int] = mapped_column(
         ForeignKey("portfolio.id", ondelete="CASCADE"),
         nullable=False
     )
 
     company: Mapped[str] = mapped_column(String(64), nullable=False)
+    position: Mapped[str] = mapped_column(String(64), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable = False)
 
-    start_date: Mapped[datetime] = mapped_column (
-        DateTime(timezone=True),
-        nullable=False
-    )
-    end_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-    )
+    start_date: Mapped[date] = mapped_column (nullable=False)
+    end_date: Mapped[date] = mapped_column(nullable=True)
 
     portfolio: Mapped["Portfolio"] = relationship(back_populates="employment")
     
 class Experience(Base):
     __tablename__ = "experience"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(
+        primary_key=True,
+        autoincrement=True
+    )
+    pid: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        unique=True,
+        nullable=False,
+        default=uuid.uuid4,
+        index=True
+    )
     
     portfolio_id: Mapped[int] = mapped_column(
         ForeignKey("portfolio.id", ondelete="CASCADE"),
@@ -84,13 +117,7 @@ class Experience(Base):
     title: Mapped[str] = mapped_column(String(64), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     
-    start_date: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False
-    )
-    end_date: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True)
-    )
+    start_date: Mapped[date] = mapped_column(nullable=False)
+    end_date: Mapped[date | None] = mapped_column()
 
-    portfolio: Mapped["Portfolio"] = relationship(back_populates="experience")
+    portfolio: Mapped["Portfolio"] = relationship(back_populates="experiences")
