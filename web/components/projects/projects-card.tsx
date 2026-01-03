@@ -2,6 +2,8 @@
 import Image, { StaticImageData } from "next/image";
 import linqqImage from "@/public/linqq.png";
 import { FaLinkedin, FaGithub } from "react-icons/fa";
+import { CiGlobe } from "react-icons/ci";
+
 
 const projects = [
   {
@@ -45,10 +47,12 @@ export default function ProjectsCard() {
   return (
     <div className="flex flex-col">
       {projects.map((item) => (
-        <div key={item.id} className="flex gap-0.5 flex-col text-sm">
-          <div className="text-[16px] font-semibold">{item.title}</div>
-          <div>{item.subtitle}</div>
-          <div className="flex gap-1">
+        <div key={item.id} className="flex gap-0.5 flex-col text-sm gap-2">
+          <div>
+            <div className="text-[16px] font-semibold">{item.title}</div>
+            <div>{item.subtitle}</div>
+          </div>
+          <div className="flex gap-3">
             <Image
               src={item.featuredImage}
               width={200}
@@ -57,28 +61,23 @@ export default function ProjectsCard() {
             />
             <div className="pr-10">{item.projectDescription}</div>
           </div>
-          <div className="flex gap-1 text-xs">
+          <div className="flex gap-1 text-xs pr-20">
             {item.tags.map((item, index) => (
-              <div className="px-1 py-0.5 bg-black/10 rounded-lg" key={index}>
+              <div className="px-1.5 py-0.5 bg-background rounded-lg" key={index}>
                 {item}
               </div>
             ))}
           </div>
           <div className="flex gap-2">
-            <FaLinkedin
-              size={24}
-              onClick={() => window.open(item.websiteLink || undefined)}
-              className="cursor-pointer"
-            />
-            <FaGithub
-              size={24}
-              onClick={() => window.open(item.githubLink || undefined)}
-              className="cursor-pointer"
-            />
+            <div className="cursor-pointer flex gap-1 items-center justify-center rounded-md border border-primary px-2 py-1" onClick={() => window.open(item.websiteLink || undefined)}>
+              <FaGithub size={14} />
+              <span>Website</span>
+            </div>
+            <div className="cursor-pointer flex gap-1 items-center justify-center rounded-md border border-primary px-2 py-1" onClick={() => window.open(item.githubLink || undefined)}>
+              <CiGlobe size={14} />
+              <span>Source</span>
+            </div>
           </div>
-
-          {item.githubLink && <div>{item.githubLink}</div>}
-          {item.websiteLink && <div>{item.websiteLink}</div>}
         </div>
       ))}
     </div>

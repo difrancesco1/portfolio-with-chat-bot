@@ -31,7 +31,7 @@ export default function MainCard() {
 
   return (
     <div
-      className={`max-w-[34rem] ${
+      className={`max-w-[34rem] overflow-y-auto ${
         open ? "main-card-open" : "main-card-collapsed"
       }`}
     >

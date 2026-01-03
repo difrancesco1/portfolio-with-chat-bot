@@ -41,8 +41,8 @@ export default function ExperienceJobCard() {
     <div>
       <div className="w-full rounded-lg border border-black/10 p-2 flex gap-3 flex-col">
         {ExperienceItems.map((item) => (
-          <>
-            <div className="flex items-center gap-3" key={item.id}>
+          <div key={item.id}>
+            <div className="flex items-center gap-3">
               <Image
                 className="rounded-full bg-white object-cover border border-gray-300 flex-shrink-0 mb-auto"
                 alt="Sapling"
@@ -70,7 +70,7 @@ export default function ExperienceJobCard() {
                 ))}
               </div>
             </div>
-          </>
+          </div>
         ))}
       </div>
     </div>
