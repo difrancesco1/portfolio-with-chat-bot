@@ -3,6 +3,7 @@ import { useState } from "react";
 import Topbar from "./topbar";
 import Tabs from "./tabs";
 import AboutSection from "./about/about-section";
+import ExperienceSection from "./experience/experience-section";
 const tabs = ["about", "experience", "projects", "education", "contact"];
 
 export default function MainCard() {
@@ -45,6 +46,7 @@ export default function MainCard() {
             {activeTab === "about" && (
               <AboutSection handleExternalLink={handleExternalLink} />
             )}
+            {activeTab === "experience" && <ExperienceSection />}
           </>
         )}
       </div>
