@@ -9,7 +9,7 @@ interface TabsProps {
 export default function Tabs({ tabs, activeTab, handleTabChange }: TabsProps) {
   return (
     <>
-      <div className="w-full flex h-full rounded-2xl bg-background py-2 px-2 font-bold">
+      <div className="w-full flex h-full rounded-2xl bg-background py-1 px-2 font-bold">
         <div className="w-full flex gap-4">
           {tabs.map((tab, index) => (
             <span

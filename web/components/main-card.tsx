@@ -47,7 +47,7 @@ export default function MainCard() {
             {activeTab === "about" && (
               <AboutSection handleExternalLink={handleExternalLink} />
             )}
-            {activeTab === "experience" && <ExperienceSection />}
+            {(activeTab === "experience" || activeTab === "education") && <ExperienceSection activeTab={activeTab}/>}
             {activeTab === "projects" && <ProjectSection />}
           </>
         )}

@@ -1,11 +1,17 @@
 "use client";
 
 import ExperienceJobCard from "./experience-job-card";
+import ExperienceEducationCard from "./experience-education-card";
 
-export default function ExperienceSection() {
+interface ExperienceSectionProps {
+  activeTab: string;
+}
+
+export default function ExperienceSection({activeTab}:ExperienceSectionProps) {
   return (
     <div>
-      <ExperienceJobCard />
+      {activeTab === "experience" && <ExperienceJobCard />}
+      {activeTab === "education" && <ExperienceEducationCard />}
     </div>
   );
 }
