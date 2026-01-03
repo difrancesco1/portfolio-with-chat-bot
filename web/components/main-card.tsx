@@ -4,6 +4,7 @@ import Topbar from "./topbar";
 import Tabs from "./tabs";
 import AboutSection from "./about/about-section";
 import ExperienceSection from "./experience/experience-section";
+import ProjectSection from "./projects/projects-section";
 const tabs = ["about", "experience", "projects", "education", "contact"];
 
 export default function MainCard() {
@@ -47,6 +48,7 @@ export default function MainCard() {
               <AboutSection handleExternalLink={handleExternalLink} />
             )}
             {activeTab === "experience" && <ExperienceSection />}
+            {activeTab === "projects" && <ProjectSection />}
           </>
         )}
       </div>
