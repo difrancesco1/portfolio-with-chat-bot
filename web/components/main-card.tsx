@@ -5,6 +5,7 @@ import Tabs from "./tabs";
 import AboutSection from "./about/about-section";
 import ExperienceSection from "./experience/experience-section";
 import ProjectSection from "./projects/projects-section";
+import ContactSection from "./contact/contact-section";
 const tabs = ["about", "experience", "projects", "education", "contact"];
 
 export default function MainCard() {
@@ -31,24 +32,31 @@ export default function MainCard() {
 
   return (
     <div
-      className={`max-w-[34rem] overflow-y-auto ${
+      className={`max-w-[34rem] ${
         open ? "main-card-open" : "main-card-collapsed"
       }`}
     >
-      <div className="flex flex-col w-full gap-4">
-        <Topbar toggleOpen={toggleOpen} open={open} />
+      <div className={`flex flex-col w-full gap-2 ${open ? "h-full" : ""}`}>
+        <div className="flex-shrink-0">
+          <Topbar toggleOpen={toggleOpen} open={open} />
+        </div>
         {open && (
           <>
-            <Tabs
-              tabs={tabs}
-              activeTab={activeTab}
-              handleTabChange={handleTabChange}
-            />
-            {activeTab === "about" && (
-              <AboutSection handleExternalLink={handleExternalLink} />
-            )}
-            {(activeTab === "experience" || activeTab === "education") && <ExperienceSection activeTab={activeTab}/>}
-            {activeTab === "projects" && <ProjectSection />}
+            <div className="flex-shrink-0">
+              <Tabs
+                tabs={tabs}
+                activeTab={activeTab}
+                handleTabChange={handleTabChange}
+              />
+            </div>
+            <div className="flex-1 overflow-y-auto min-h-0 hide-scrollbar">
+              {activeTab === "about" && (
+                <AboutSection handleExternalLink={handleExternalLink} />
+              )}
+              {(activeTab === "experience" || activeTab === "education") && <ExperienceSection activeTab={activeTab}/>}
+              {activeTab === "projects" && <ProjectSection />}
+              {activeTab === "contact" && <ContactSection/>}
+            </div>
           </>
         )}
       </div>
