@@ -1,4 +1,7 @@
-import MainCard from "./components/main-card";
+import MainCard from "../components/main-card";
+
+// fetch the data
+//
 
 export default function Home() {
   return (
