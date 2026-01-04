@@ -2,6 +2,8 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException
 from schemas.portfolio import (
+    BiographyResponse,
+    BiographyCreate,
     EducationCreate,
     EducationResponse,
     EmploymentCreate,
@@ -17,15 +19,19 @@ from database.session import get_db
 
 admin_router = APIRouter(prefix="/admin", tags=["admin"])
 
-@admin_router.get("/portfolios_full", response_model=list[PortfolioFullResponse])
-async def get_all_full_portfolios(db: AsyncSession = Depends(get_db)):
+@admin_router.post("/{portfolio_pid}/add/biography", response_model=BiographyResponse)
+async def add_biography(
+    portfolio_pid: uuid.UUID,
+    bio_data: BiographyCreate,
+    db: AsyncSession = Depends(get_db)
+):
     service = PortfolioService(db)
     try:
-        return await service.get_all_full_portfolios()
+        return await service.add_biography(portfolio_pid, bio_data)
     except ValueError as error:
-        raise HTTPException(status_code=400, details=str(error))
-    
-@admin_router.post("/{portfolio_pid}/add_education", response_model=EducationResponse)
+        raise HTTPException(status_code=400, detail=str(error))
+
+@admin_router.post("/{portfolio_pid}/add/education", response_model=EducationResponse)
 async def add_education(
     portfolio_pid: uuid.UUID,
     edu_data: EducationCreate,
@@ -37,7 +43,7 @@ async def add_education(
     except ValueError as error:
         raise HTTPException(status_code=400, details=str(error))
     
-@admin_router.post("/{portfolio_pid}/add_employment", response_model=EmploymentResponse)
+@admin_router.post("/{portfolio_pid}/add/employment", response_model=EmploymentResponse)
 async def add_employment(
     portfolio_pid: uuid.UUID,
     emp_data: EmploymentCreate,
@@ -49,7 +55,7 @@ async def add_employment(
     except ValueError as error:
         raise HTTPException(status_code=400, details=str(error))
     
-@admin_router.post("/{portfolio_pid}/add_experience", response_model=ExperienceResponse)
+@admin_router.post("/{portfolio_pid}/add/experience", response_model=ExperienceResponse)
 async def add_experience(
     portfolio_pid: uuid.UUID,
     exp_data: ExperienceCreate,
@@ -61,7 +67,7 @@ async def add_experience(
     except ValueError as error:
         raise HTTPException(status_code=400, details=str(error))
     
-@admin_router.post("/create_portfolio", response_model=PortfolioResponse)
+@admin_router.post("/create/portfolio", response_model=PortfolioResponse)
 async def create_portfolio(
     data: PortfolioCreate,
     db: AsyncSession = Depends(get_db)

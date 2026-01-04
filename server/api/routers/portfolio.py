@@ -2,13 +2,9 @@ import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException
 from schemas.portfolio import (
-    EducationCreate,
     EducationResponse,
-    EmploymentCreate,
     EmploymentResponse,
-    ExperienceCreate,
     ExperienceResponse,
-    PortfolioCreate,
     PortfolioResponse,
     PortfolioEducationResponse,
     PortfolioEmploymentResponse,
@@ -28,6 +24,14 @@ router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 if config.DEBUG: 
     router.include_router(admin_router)
 
+@router.get("/", response_model=list[PortfolioFullResponse])
+async def get_all_full_portfolios(db: AsyncSession = Depends(get_db)):
+    service = PortfolioService(db)
+    try:
+        return await service.get_all_full_portfolios()
+    except ValueError as error:
+        raise HTTPException(status_code=400, details=str(error))
+    
 @router.get("/{portfolio_pid}/education/all", response_model=list[EducationResponse])
 async def get_all_educations(
     portfolio_pid: uuid.UUID,
