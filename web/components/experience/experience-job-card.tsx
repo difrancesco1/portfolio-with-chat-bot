@@ -39,7 +39,7 @@ const ExperienceItems = [
 export default function ExperienceJobCard() {
   return (
     <div>
-      <div className="w-full rounded-lg border border-black/10 p-2 flex gap-3 flex-col">
+      <div className="w-full rounded-lg p-2 flex gap-3 flex-col">
         {ExperienceItems.map((item) => (
           <div key={item.id}>
             <div className="flex items-center gap-3">

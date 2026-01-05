@@ -6,6 +6,7 @@ import AboutSection from "./about/about-section";
 import ExperienceSection from "./experience/experience-section";
 import ProjectSection from "./projects/projects-section";
 import ContactSection from "./contact/contact-section";
+import AboutFooter from "./about/about-footer";
 const tabs = ["about", "experience", "projects", "education", "contact"];
 
 export default function MainCard() {
@@ -32,11 +33,11 @@ export default function MainCard() {
 
   return (
     <div
-      className={`max-w-[34rem] ${
+      className={`max-w-[36rem] ${
         open ? "main-card-open" : "main-card-collapsed"
       }`}
     >
-      <div className={`flex flex-col w-full gap-2 ${open ? "h-full" : ""}`}>
+      <div className={`flex flex-col w-full gap-3 ${open ? "h-full" : ""}`}>
         <div className="flex-shrink-0">
           <Topbar toggleOpen={toggleOpen} open={open} />
         </div>
@@ -49,14 +50,18 @@ export default function MainCard() {
                 handleTabChange={handleTabChange}
               />
             </div>
-            <div className="flex-1 overflow-y-auto min-h-0 hide-scrollbar">
-              {activeTab === "about" && (
-                <AboutSection handleExternalLink={handleExternalLink} />
+            <div className="flex-1 overflow-y-auto min-h-0 hide-scrollbar h-full">
+              {activeTab === "about" && <AboutSection />}
+              {(activeTab === "experience" || activeTab === "education") && (
+                <ExperienceSection activeTab={activeTab} />
               )}
-              {(activeTab === "experience" || activeTab === "education") && <ExperienceSection activeTab={activeTab}/>}
               {activeTab === "projects" && <ProjectSection />}
-              {activeTab === "contact" && <ContactSection/>}
+              {activeTab === "contact" && <ContactSection />}
             </div>
+            <AboutFooter
+              handleExternalLink={handleExternalLink}
+              activeTab={activeTab}
+            />
           </>
         )}
       </div>
