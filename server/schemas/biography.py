@@ -1,20 +1,18 @@
 import uuid
 from pydantic import BaseModel, Field
 from typing import Optional
-from schemas import (
-    BaseConfig,
-    OutputConfig,
-    InputConfig,
-    BulletPointResponse,
-    BulletPointCreate
-)
+
+# Relative
+from .config import BaseConfig, OutputConfig, InputConfig
+from .bullet_point import BulletPointCreate, BiographyBulletPointResponse
+
 # Biography
 class BiographyBase(BaseConfig, BaseModel):
     pass
 
 class BiographyResponse(OutputConfig, BiographyBase):
-    content: list[BulletPointResponse]
+    bullet_points: list[BiographyBulletPointResponse] = Field(..., alias="content")
     pid: uuid.UUID = Field(..., alias="biographyPid")
 
 class BiographyCreate(InputConfig, BiographyBase):
-    content: Optional[list[BulletPointCreate]] = None
+    bullet_points: Optional[list[BulletPointCreate]] = Field(alias="content")

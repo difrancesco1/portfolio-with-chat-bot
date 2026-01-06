@@ -1,14 +1,15 @@
 import uuid
 from pydantic import BaseModel, EmailStr, Field
-from schemas import (
-    BaseConfig,
-    OutputConfig,
-    InputConfig,
-    BiographyResponse,
-    EducationResponse,
-    EmploymentResponse,
-    ExperienceResponse
-)
+from typing import Optional
+# Relative
+from .config import BaseConfig, OutputConfig, InputConfig
+from .biography import BiographyCreate, BiographyResponse
+from .document import DocumentResponse
+from .education import EducationResponse
+from .employment import EmploymentResponse
+from .experience import ExperienceResponse
+from .link import LinkResponse
+from .project import ProjectResponse
 
 # Portfolio
 class PortfolioBase(BaseConfig, BaseModel):
@@ -45,7 +46,10 @@ class PortfolioExperienceResponse(PortfolioResponse):
     experiences: list[ExperienceResponse]
 
 class PortfolioFullResponse(PortfolioResponse):
-    biographgy: BiographyResponse
+    biography: Optional[BiographyResponse]
+    document: Optional[DocumentResponse]
     education: list[EducationResponse]
     employment: list[EmploymentResponse]
     experiences: list[ExperienceResponse]
+    links: list[LinkResponse]
+    projects: list[ProjectResponse]

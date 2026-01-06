@@ -1,7 +1,8 @@
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, HTTPException
-from schemas.portfolio import (
+from schemas import (
+    BiographyResponse,
     EducationResponse,
     EmploymentResponse,
     ExperienceResponse,
@@ -10,6 +11,7 @@ from schemas.portfolio import (
     PortfolioEmploymentResponse,
     PortfolioExperienceResponse,
     PortfolioFullResponse,
+    ProjectResponse,
 )
 from services.portfolio_service import PortfolioService
 from database.session import get_db
@@ -31,7 +33,18 @@ async def get_all_full_portfolios(db: AsyncSession = Depends(get_db)):
         return await service.get_all_full_portfolios()
     except ValueError as error:
         raise HTTPException(status_code=400, details=str(error))
-    
+
+@router.get("/{portfolio_pid}/biography", response_model=BiographyResponse)
+async def get_biography(
+    portfolio_pid: uuid.UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.get_biography(portfolio_pid=portfolio_pid)
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error))
+        
 @router.get("/{portfolio_pid}/education/all", response_model=list[EducationResponse])
 async def get_all_educations(
     portfolio_pid: uuid.UUID,
@@ -98,5 +111,17 @@ async def get_experience_by_pid(
     service = PortfolioService(db)
     try:
         return await service.get_experience_by_pid(portfolio_pid, experience_pid)
+    except ValueError as error:
+        raise HTTPException(status_code=404, detail=str(error))
+    
+@router.get("/{portfolio_pid}/project/{project_pid}", response_model=ProjectResponse)
+async def get_project_by_pid(
+    portfolio_pid: uuid.UUID,
+    project_pid: uuid.UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.get_project_by_pid(portfolio_pid, project_pid)
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))

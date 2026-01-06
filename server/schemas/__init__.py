@@ -1,17 +1,28 @@
-from schemas.biography import (
-    BiographyBase,
-    BiographyCreate,
-    BiographyResponse
-)
-from schemas.bullet_point import (
-    BulletPointBase,
-    BulletPointCreate,
-    BulletPointResponse
+from schemas.types import (
+    EndDateField,
+    PositiveInt,
+    StartDateField,
+    StringField,
+    TextField,
 )
 from schemas.config import (
     BaseConfig,
     InputConfig,
     OutputConfig
+)
+from schemas.bullet_point import (
+    BulletPointBase,
+    BulletPointCreate,
+    BulletPointResponse,
+    BiographyBulletPointResponse,
+    EducationBulletPointResponse,
+    EmploymentBulletPointResponse,
+    ExperienceBulletPointResponse
+)
+from schemas.biography import (
+    BiographyBase,
+    BiographyCreate,
+    BiographyResponse
 )
 from schemas.document import (
     DocumentBase,
@@ -32,6 +43,11 @@ from schemas.experience import (
     ExperienceCreate,
     ExperienceResponse
 )
+from schemas.link import (
+    LinkBase,
+    LinkCreate,
+    LinkResponse
+)
 from schemas.portfolio import (
     PortfolioBase,
     PortfolioCreate,
@@ -42,12 +58,17 @@ from schemas.portfolio import (
     PortfolioEmploymentResponse,
     PortfolioExperienceResponse
 )
-from schemas.types import (
-    StringField,
-    TextField,
-    StartDateField,
-    EndDateField
+from schemas.project import (
+    ProjectBase,
+    ProjectCreate,
+    ProjectResponse
 )
+from schemas.tag import (
+    TagBase,
+    TagCreate,
+    TagResponse
+)
+
 __all__ = [
     "BaseConfig",
     "InputConfig",
@@ -58,6 +79,10 @@ __all__ = [
     "BulletPointBase",
     "BulletPointCreate",
     "BulletPointResponse",
+    "BiographyBulletPointResponse",
+    "EducationBulletPointResponse",
+    "EmploymentBulletPointResponse",
+    "ExperienceBulletPointResponse",
     "DocumentBase",
     "DocumentResponse",
     "EducationBase",
@@ -69,6 +94,9 @@ __all__ = [
     "ExperienceBase",
     "ExperienceCreate",
     "ExperienceResponse",
+    "LinkBase",
+    "LinkCreate",
+    "LinkResponse",
     "PortfolioBase",
     "PortfolioCreate",
     "PortfolioResponse",
@@ -77,6 +105,12 @@ __all__ = [
     "PortfolioEducationResponse",
     "PortfolioEmploymentResponse",
     "PortfolioExperienceResponse",
+    "ProjectBase",
+    "ProjectCreate",
+    "ProjectResponse",
+    "TagBase",
+    "TagCreate",
+    "TagResponse",
     "StringField",
     "TextField",
     "StartDateField",

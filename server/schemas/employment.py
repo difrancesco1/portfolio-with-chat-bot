@@ -1,14 +1,11 @@
 import uuid
 from pydantic import BaseModel, Field
-from schemas import (
-    BaseConfig,
-    OutputConfig,
-    InputConfig,
-    BulletPointResponse,
-    EndDateField,
-    StartDateField,
-    StringField,
-)
+from typing import Optional
+
+# Relative
+from .config import BaseConfig, OutputConfig, InputConfig
+from .bullet_point import BulletPointCreate, EmploymentBulletPointResponse
+from .types import EndDateField, StartDateField, StringField
 
 # Employment
 class EmploymentBase(BaseConfig, BaseModel):
@@ -18,8 +15,8 @@ class EmploymentBase(BaseConfig, BaseModel):
     end_date: EndDateField = None
 
 class EmploymentResponse(OutputConfig, EmploymentBase):
-    content: list[BulletPointResponse]
+    bullet_points: list[EmploymentBulletPointResponse] = Field(alias="content")
     pid: uuid.UUID = Field(..., alias="employmentPid")
 
 class EmploymentCreate(InputConfig, EmploymentBase):
-    pass
+    bullet_points: Optional[list[BulletPointCreate]] = Field(alias="content")

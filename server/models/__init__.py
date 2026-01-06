@@ -1,11 +1,14 @@
-from models.base import Base
-from models.biography import Biography, BiographyBulletPoint
-from models.bullet_points import BulletPoint
-from models.document import Document
-from models.education import Education
-from models.employment import Employment
-from models.experience import Experience
-from models.portfolio import Portfolio
+from .base import Base
+from .bullet_points import BulletPoint
+from .tag import Tag
+from .link import Link
+from .portfolio import Portfolio, PortfolioLink
+from .document import Document
+from .education import Education, EducationBulletPoint
+from .employment import Employment, EmploymentBulletPoint
+from .experience import Experience, ExperienceBulletPoint
+from .biography import Biography, BiographyBulletPoint
+from .project import Project, ProjectLink, ProjectTag
 
 __all__ = [
     "Base",
@@ -14,7 +17,16 @@ __all__ = [
     "BulletPoint",
     "Document",
     "Education",
+    "EducationBulletPoint",
     "Employment",
+    "EmploymentBulletPoint",
     "Experience",
-    "Portfolio", 
+    "ExperienceBulletPoint",
+    "Link",
+    "Portfolio",
+    "PortfolioLink",
+    "Project",
+    "ProjectLink",
+    "ProjectTag",
+    "Tag"
 ]

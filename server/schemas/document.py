@@ -1,16 +1,8 @@
 import uuid
-from datetime import date
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from typing import Optional
-from typing_extensions import Annotated
+from pydantic import BaseModel, Field
 
-from schemas import (
-    BaseConfig,
-    OutputConfig,
-    InputConfig,
-    TextField,
-    StringField
-)
+from .config import BaseConfig, OutputConfig
+from .types import StringField
 
 class DocumentBase(BaseConfig, BaseModel):
     filename: StringField

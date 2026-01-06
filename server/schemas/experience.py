@@ -1,14 +1,11 @@
 import uuid
 from pydantic import BaseModel, Field
-from schemas import (
-    BaseConfig,
-    OutputConfig,
-    InputConfig,
-    BulletPointResponse,
-    EndDateField,
-    StartDateField,
-    StringField,
-)
+from typing import Optional
+
+# Relative
+from .config import BaseConfig, OutputConfig, InputConfig
+from .bullet_point import BulletPointCreate, ExperienceBulletPointResponse
+from .types import EndDateField, StartDateField, StringField
 
 # Experience
 class ExperienceBase(BaseConfig, BaseModel):
@@ -17,8 +14,8 @@ class ExperienceBase(BaseConfig, BaseModel):
     end_date: EndDateField
 
 class ExperienceResponse(OutputConfig, ExperienceBase):
-    content: list[BulletPointResponse]
+    bullet_points: list[ExperienceBulletPointResponse] = Field(..., alias="content")
     pid: uuid.UUID = Field(..., alias="experiencePid")
 
 class ExperienceCreate(InputConfig, ExperienceBase):
-    pass
+    bullet_points: Optional[list[BulletPointCreate]] = Field(alias="content")

@@ -1,13 +1,15 @@
 from datetime import date
 import uuid
-from models import (
-    Base,
-    BulletPoint, 
-    Portfolio
-)
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from typing import TYPE_CHECKING
+
+# Relative
+from .base import Base
+from .bullet_points import BulletPoint
+if TYPE_CHECKING:
+    from .portfolio import Portfolio
 
 class Employment(Base):
     __tablename__ = "employment"
@@ -38,15 +40,28 @@ class Employment(Base):
     bullet_points: Mapped[list["EmploymentBulletPoint"]] = relationship(
         back_populates="employment",
         cascade="all, delete-orphan",
-        order_by="EmploymentBulletPoint.bullet_point.position",
+        order_by="EmploymentBulletPoint.position",
         lazy="selectin"
     )
 
 class EmploymentBulletPoint(Base):
     __tablename__ = "employment_bullet_point"
 
-    employment_id: Mapped[int] = ForeignKey("employment.id", primary_key=True)
-    bullet_point_id: Mapped[int] = ForeignKey("bullet_point.id", primary_key=True)
+    employment_id: Mapped[int] = mapped_column(
+        ForeignKey("employment.id", ondelete="CASCADE"),
+        primary_key=True
+    )
+    bullet_point_id: Mapped[int] = mapped_column(
+        ForeignKey("bullet_point.id", ondelete="CASCADE"), 
+        primary_key=True
+    )
+    position: Mapped[int] = mapped_column(nullable=False)
 
-    employment: Mapped["Employment"] = relationship(back_populates="bullet_points")
-    bullet_point: Mapped["BulletPoint"] = relationship(lazy="selectin")
+    employment: Mapped["Employment"] = relationship(
+        back_populates="bullet_points",
+        foreign_keys=[employment_id]
+    )
+    bullet_point: Mapped["BulletPoint"] = relationship(
+        foreign_keys=[bullet_point_id],
+        lazy="selectin"
+    )

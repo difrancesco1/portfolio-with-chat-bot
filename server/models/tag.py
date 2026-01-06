@@ -1,14 +1,14 @@
 import uuid
-from sqlalchemy import Text
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.dialects.postgresql import UUID
 
 # Relative
 from .base import Base
 
-class BulletPoint(Base):
-    __tablename__ = "bullet_point"
-    
+class Tag(Base):
+    __tablename__ = "tag"
+
     id: Mapped[int] = mapped_column(
         primary_key=True,
         autoincrement=True
@@ -20,4 +20,4 @@ class BulletPoint(Base):
         default=uuid.uuid4,
         index=True
     )
-    content: Mapped[str] = mapped_column(Text)
+    tag: Mapped[str] = mapped_column(String(64), nullable=False)
