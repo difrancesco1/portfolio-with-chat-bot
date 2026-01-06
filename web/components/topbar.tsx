@@ -2,6 +2,7 @@
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 import RemoveRoundedIcon from "@mui/icons-material/RemoveRounded";
 import Typewriter from "typewriter-effect";
+import { ThemeToggle } from "./theme-toggle";
 
 interface Props {
   toggleOpen: () => void;
@@ -34,14 +35,17 @@ export default function Topbar({ toggleOpen, open }: Props) {
             />
           )}
         </div>
-        <div
-          className={`${open ? "menu-button-open" : "menu-button-collapsed"}`}
-        >
-          {open ? (
-            <RemoveRoundedIcon onClick={toggleOpen} />
-          ) : (
-            <AddRoundedIcon onClick={toggleOpen} />
-          )}
+        <div className="flex items-center gap-2">
+          {open && <ThemeToggle />}
+          <div
+            className={`${open ? "menu-button-open" : "menu-button-collapsed"}`}
+          >
+            {open ? (
+              <RemoveRoundedIcon onClick={toggleOpen} />
+            ) : (
+              <AddRoundedIcon onClick={toggleOpen} />
+            )}
+          </div>
         </div>
       </div>
     </>

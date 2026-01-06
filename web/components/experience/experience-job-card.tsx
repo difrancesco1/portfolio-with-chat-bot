@@ -47,8 +47,8 @@ export default function ExperienceJobCard() {
                 className="rounded-full bg-white object-cover border border-gray-300 flex-shrink-0 mb-auto"
                 alt="Sapling"
                 src={item.companyImage}
-                width={48}
-                height={48}
+                width={43}
+                height={43}
               />
               <div className="flex flex-col w-full">
                 <span className="font-semibold">{item.companyName}</span>

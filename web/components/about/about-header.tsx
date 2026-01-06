@@ -18,9 +18,9 @@ export default function AboutHeader({ title }: AboutHeaderProps) {
           className="rounded-full"
           alt="Profile Picture"
         />
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <h1 className="text-3xl">{title}</h1>
-          <div className="flex gap-2 text-sm">
+          <div className="flex gap-2 text-xs">
             <span className="bg-accent p-0.5 px-1 rounded-md font-semibold">
               open to work
             </span>

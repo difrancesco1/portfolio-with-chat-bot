@@ -1,6 +1,9 @@
 "use client";
 
 import ChatPrompt from "./chat-prompt";
+import ContentTabs from "./content-tabs";
+import GitHubCalendar from "./github-calendar";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 
 interface BiographyItem {
   id: number;
@@ -18,31 +21,15 @@ export default function AboutBody({ biography }: AboutBodyProps) {
       {biography.map((item) => (
         <span key={item.id}>{item.bulletPoint}</span>
       ))}
-
-      <div className="font-semibold">What I do:</div>
-      <ul className="list-disc list-inside">
-        <li>full stack engineer</li>
-        <li>founder of sapling ai</li>
-        <li>solves business needs</li>
-      </ul>
-      <div className="font-semibold">Services:</div>
-      <div className="grid w-full grid-cols-2 gap-4 text-sm">
-        <div className="flex flex-col gap-1 py-2 bg-muted p-2 rounded-md">
-          <span>👨‍💻 hire my team</span>
-          <span>
-            with experience building production ready apps, my team and i can
-            build your next project.
-          </span>
-        </div>
-        <div className="flex flex-col gap-1 py-2 bg-muted p-2 rounded-md">
-          <span>👨‍💻 hire me</span>
-          <span>
-            with experience building production ready apps, my team and i can
-            build your next project.
-          </span>
-        </div>
-      </div>
-      <ChatPrompt />
+      <Tabs defaultValue="chatbot" className="flex-1 flex flex-col gap-2">
+        <ContentTabs />
+        <TabsContent value="chatbot" className="flex-1 mt-0">
+          <ChatPrompt />
+        </TabsContent>
+        <TabsContent value="github" className="flex-1 mt-0">
+          <GitHubCalendar />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

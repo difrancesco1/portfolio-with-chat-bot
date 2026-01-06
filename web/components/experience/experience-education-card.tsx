@@ -39,11 +39,11 @@ export default function ExperienceEducationCard() {
           <div key={item.id}>
             <div className="flex gap-3">
               <Image
-                className="rounded-full bg-white object-cover border border-gray-300 flex-shrink-0 mb-auto"
+                className="rounded-full bg-white object-contain border border-gray-300 flex-shrink-0 mb-auto w-10.5 h-10.5 p-1"
                 alt="Sapling"
                 src={item.companyImage}
-                width={48}
-                height={48}
+                width={43}
+                height={43}
               />
               <div className="flex flex-col w-full">
                 <span className="font-semibold">{item.schoolName}</span>

@@ -1,37 +1,39 @@
 "use client";
 
 import { Input } from "../ui/input";
-import { MessageCircle } from "lucide-react";
+import Typewriter from "typewriter-effect";
+import { RiRobot2Line } from "react-icons/ri";
 
 export default function ChatPrompt() {
   return (
-    <div className="w-full h-full relative flex-1 bg-muted min-h-0 rounded-lg px-2 py-1 flex flex-col text-center">
-      <div className="flex items-center gap-2 justify-center">
-        <MessageCircle className="w-5 h-5 text-primary" />
+    <div className="w-full h-full border border-secondary rounded-sm px-2 py-1 flex flex-col justify-center bg-background">
+      <div className="flex items-center gap-2">
+        <RiRobot2Line size={20} className="cursor-pointer flex-shrink-0" />
+        <div className="text-sm text-muted-foreground text-left">
+          <Typewriter
+            options={{
+              strings: ["Send a message to start the chat!"],
+              autoStart: true,
+              loop: false,
+              cursor: "",
+              delay: 50,
+              deleteSpeed: Infinity,
+            }}
+          />
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1 flex-1">
-        <div className="text-sm text-muted-foreground">
-          Send a message to start the chat! You can ask the bot anything about
-          me and it will give you the information.
-        </div>
+      <div className="flex flex-col gap-4 flex-1 justify-center items-center w-full"></div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex flex-col gap-2 text-sm">
-            <div className="bg-background/50 hover:bg-background/80 transition-colors p-1 rounded-md cursor-pointer border border-border/50">
-              💼 What is Sapling AI?
-            </div>
-            <div className="bg-background/50 hover:bg-background/80 transition-colors p-1 rounded-md cursor-pointer border border-border/50">
-              🔗 Insert the link to a job to see if Josh is a good fit (and why)
-            </div>
-            <div className="bg-background/50 hover:bg-background/80 transition-colors p-1 rounded-md cursor-pointer border border-border/50">
-              📏 Is Josh really 6'5?
-            </div>
+      <div className="mt-4 p-2 flex flex-col gap-1">
+        <div className="flex text-xs gap-1">
+          <div className="bg-background/50 hover:bg-background/80 transition-colors p-1 rounded-md cursor-pointer border border-border/50 px-2">
+            What is Sapling AI?
+          </div>
+          <div className="bg-background/50 hover:bg-background/80 transition-colors p-1 rounded-md cursor-pointer border border-border/50 px-2">
+            Is Josh really 6'5?
           </div>
         </div>
-      </div>
-
-      <div className="mt-4">
         <Input className="w-full" placeholder="Ask something..." />
       </div>
     </div>
