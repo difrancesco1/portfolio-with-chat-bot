@@ -8,6 +8,7 @@ from core.config import get_config
 from database.session import get_db
 
 from api.routers.portfolio import router as portfolio_router
+from api.routers.debug import debug_router
 
 config = get_config()
 
@@ -16,6 +17,8 @@ app = FastAPI(
     debug=config.DEBUG,
 )
 app.include_router(portfolio_router)
+if config.DEBUG:
+    app.include_router(debug_router)
 
 async def check_db_tables(db: AsyncSession):
     result = await db.execute(

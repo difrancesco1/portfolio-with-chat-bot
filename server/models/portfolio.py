@@ -1,10 +1,19 @@
 import uuid
-from models import Base
-
-from datetime import date
-from sqlalchemy import Float, ForeignKey, String, Text
+from sqlalchemy import ForeignKey, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
+from typing import TYPE_CHECKING
+
+# Relative
+from .base import Base
+if TYPE_CHECKING:
+    from .biography import Biography
+    from .document import Document
+    from .education import Education
+    from .employment import Employment
+    from .experience import Experience
+    from .link import Link
+    from .project import Project
 
 class Portfolio(Base):
     __tablename__ = "portfolio"
@@ -20,8 +29,30 @@ class Portfolio(Base):
         default=uuid.uuid4,
         index=True
     )
-    email: Mapped[str] = mapped_column(String(64), unique=True)
+    first_name: Mapped[str] = mapped_column(
+        String(64), 
+        nullable=False
+    )
+    last_name: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False
+    )
+    email: Mapped[str] = mapped_column(
+        String(64), 
+        unique=True,
+        nullable=False
+    )
 
+    biography: Mapped["Biography"] = relationship(
+        back_populates="portfolio",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
+    document: Mapped["Document"] = relationship(
+        back_populates="portfolio",
+        cascade="all, delete-orphan",
+        passive_deletes=True
+    )
     education: Mapped[list["Education"]] = relationship(
         back_populates="portfolio",
         cascade="all, delete-orphan",
@@ -37,87 +68,33 @@ class Portfolio(Base):
         cascade="all, delete-orphan",
         passive_deletes=True
     )
-
-class Education(Base):
-    __tablename__ = "education"
-
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
+    links: Mapped[list["PortfolioLink"]] = relationship(
+        back_populates="portfolio",
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
-    pid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        unique=True,
-        nullable=False,
-        default=uuid.uuid4,
-        index=True
+    projects: Mapped[list["Project"]] = relationship(
+        back_populates="portfolio",
+        cascade="all, delete-orphan",
+        passive_deletes=True
     )
+
+class PortfolioLink(Base):
+    __tablename__ = "portfolio_link"
+
     portfolio_id: Mapped[int] = mapped_column(
-        ForeignKey("portfolio.id", ondelete="CASCADE"),
-        nullable=False
+        ForeignKey("portfolio.id"), 
+        primary_key=True
     )
-
-    major: Mapped[str] = mapped_column(String(64), nullable=False)
-    degree: Mapped[str] = mapped_column(String(64), nullable=False)
-    gpa: Mapped[float] = mapped_column(Float(precision=2), nullable=True)
-
-    start_date: Mapped[date] = mapped_column (nullable=False)
-    end_date: Mapped[date] = mapped_column(nullable=True)
-
-    portfolio: Mapped["Portfolio"] = relationship(back_populates="education")
-
-class Employment(Base):
-    __tablename__ = "employment"
-
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
+    link_id: Mapped[int] = mapped_column(
+        ForeignKey("link.id", ondelete="CASCADE"),
+        primary_key=True
     )
-    pid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        unique=True,
-        nullable=False,
-        default=uuid.uuid4,
-        index=True
+    portfolio: Mapped["Portfolio"] = relationship(
+        back_populates="links",
+        foreign_keys=[portfolio_id]
     )
-    portfolio_id: Mapped[int] = mapped_column(
-        ForeignKey("portfolio.id", ondelete="CASCADE"),
-        nullable=False
+    link: Mapped["Link"] = relationship(
+        foreign_keys=[link_id],
+        lazy="selectin"
     )
-
-    company: Mapped[str] = mapped_column(String(64), nullable=False)
-    position: Mapped[str] = mapped_column(String(64), nullable=False)
-    content: Mapped[str] = mapped_column(Text, nullable = False)
-
-    start_date: Mapped[date] = mapped_column (nullable=False)
-    end_date: Mapped[date] = mapped_column(nullable=True)
-
-    portfolio: Mapped["Portfolio"] = relationship(back_populates="employment")
-    
-class Experience(Base):
-    __tablename__ = "experience"
-
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-        autoincrement=True
-    )
-    pid: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        unique=True,
-        nullable=False,
-        default=uuid.uuid4,
-        index=True
-    )
-    
-    portfolio_id: Mapped[int] = mapped_column(
-        ForeignKey("portfolio.id", ondelete="CASCADE"),
-        nullable=False
-    )
-
-    title: Mapped[str] = mapped_column(String(64), nullable=False)
-    content: Mapped[str] = mapped_column(Text, nullable=False)
-    
-    start_date: Mapped[date] = mapped_column(nullable=False)
-    end_date: Mapped[date | None] = mapped_column()
-
-    portfolio: Mapped["Portfolio"] = relationship(back_populates="experiences")

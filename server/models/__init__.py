@@ -1,10 +1,32 @@
-from models.base import Base
-from models.portfolio import Portfolio, Education, Employment, Experience
+from .base import Base
+from .bullet_points import BulletPoint
+from .tag import Tag
+from .link import Link
+from .portfolio import Portfolio, PortfolioLink
+from .document import Document
+from .education import Education, EducationBulletPoint
+from .employment import Employment, EmploymentBulletPoint
+from .experience import Experience, ExperienceBulletPoint
+from .biography import Biography, BiographyBulletPoint
+from .project import Project, ProjectLink, ProjectTag
 
 __all__ = [
     "Base",
-    "Portfolio", 
+    "Biography",
+    "BiographyBulletPoint",
+    "BulletPoint",
+    "Document",
     "Education",
+    "EducationBulletPoint",
     "Employment",
-    "Experience"
+    "EmploymentBulletPoint",
+    "Experience",
+    "ExperienceBulletPoint",
+    "Link",
+    "Portfolio",
+    "PortfolioLink",
+    "Project",
+    "ProjectLink",
+    "ProjectTag",
+    "Tag"
 ]
