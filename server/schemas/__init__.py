@@ -14,6 +14,7 @@ from schemas.bullet_point import (
     BulletPointBase,
     BulletPointCreate,
     BulletPointResponse,
+    BiographyBulletPointBase,
     BiographyBulletPointResponse,
     EducationBulletPointResponse,
     EmploymentBulletPointResponse,
@@ -22,7 +23,8 @@ from schemas.bullet_point import (
 from schemas.biography import (
     BiographyBase,
     BiographyCreate,
-    BiographyResponse
+    BiographyResponse,
+    BiographyUpdate
 )
 from schemas.document import (
     DocumentBase,
@@ -76,6 +78,8 @@ __all__ = [
     "BiographyBase",
     "BiographyCreate",
     "BiographyResponse",
+    "BiographyBulletPointBase",
+    "BiographyUpdate",
     "BulletPointBase",
     "BulletPointCreate",
     "BulletPointResponse",
@@ -105,6 +109,7 @@ __all__ = [
     "PortfolioEducationResponse",
     "PortfolioEmploymentResponse",
     "PortfolioExperienceResponse",
+    "PositiveInt",
     "ProjectBase",
     "ProjectCreate",
     "ProjectResponse",

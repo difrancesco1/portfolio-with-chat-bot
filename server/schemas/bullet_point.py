@@ -21,9 +21,12 @@ class BulletPointCreate(InputConfig, BulletPointBase):
     position: PositiveInt
     parent_type: BulletPointType # May remove this later
 
-class BiographyBulletPointResponse(OutputConfig, BaseModel):
+class BiographyBulletPointBase(BaseConfig, BaseModel):
     position: PositiveInt
     bullet_point: BulletPointResponse
+
+class BiographyBulletPointResponse(OutputConfig, BiographyBulletPointBase):
+    pass
 
 class EducationBulletPointResponse(OutputConfig, BaseModel):
     position: PositiveInt

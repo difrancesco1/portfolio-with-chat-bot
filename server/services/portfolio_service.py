@@ -17,6 +17,7 @@ from models import (
 )
 from schemas import (
     BiographyCreate,
+    BiographyUpdate,
     BulletPointCreate,
     EducationCreate,
     EmploymentCreate,
@@ -583,3 +584,22 @@ class PortfolioService:
         await self.session.commit()
 
         return portfolio
+    
+    async def update_biography(
+        self, portfolio_pid: uuid.UUID, biography_pid: uuid.UUID, bio_data: BiographyUpdate
+    ) -> Biography:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        biography = await self.repository.queries.get_biography_by_pid(
+            portfolio_id=portfolio.id,
+            biography_pid=biography_pid
+        )
+        await self.repository.mutations.update_biography(
+            biography=biography,
+            bio_data=bio_data
+        )
+        await self.session.flush()
+        
+        return await self.repository.queries.get_biography_by_pid(
+            portfolio_id=portfolio.id,
+            biography_pid=biography_pid
+        )

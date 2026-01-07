@@ -1,18 +1,18 @@
 # Configurations
 from pydantic import BaseModel, ConfigDict
 
-class BaseConfig(BaseModel):
+class BaseConfig:
     model_config = ConfigDict(
         populate_by_name=True
     )
 
-class InputConfig(BaseModel):
+class InputConfig:
     model_config = ConfigDict(
         extra="forbid",
-        strip_white_space=True
+        str_strip_whitespace=True
     )
 
-class OutputConfig(BaseModel):
+class OutputConfig:
     model_config = ConfigDict(
         from_attributes=True,
         ser_json_by_alias=True,

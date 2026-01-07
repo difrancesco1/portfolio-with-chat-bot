@@ -17,6 +17,7 @@ from models import (
 )
 from schemas import (
     BiographyCreate,
+    BiographyUpdate,
     BulletPointCreate,
     EducationCreate,
     EmploymentCreate,
@@ -201,3 +202,8 @@ class PortfolioMutations:
         tag_result = await self.writes.delete_tag(tag_id=tag.id)
         if tag_result < 1:
             raise ValueError(f"No row for bullet point ({tag.id}) exists")
+        
+    async def update_biography(
+        self, biography: Biography, bio_data: BiographyUpdate
+    ):
+        pass

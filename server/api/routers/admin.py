@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from schemas import (
     BiographyResponse,
     BiographyCreate,
+    BiographyUpdate,
     BulletPointCreate,
     BulletPointResponse,
     BiographyBulletPointResponse,
@@ -353,3 +354,20 @@ async def delete_portfolio_project(
         )
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))
+    
+@admin_router.patch("/{portfolio_pid}/update/biography/{biography_pid}", response_model=BiographyResponse)
+async def update_biography(
+    portfolio_pid: uuid.UUID,
+    biography_pid: uuid.UUID,
+    bio_update_data: BiographyUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        service.update_biography(
+            portfolio_pid=portfolio_pid,
+            biography_pid=biography_pid,
+            bio_data=bio_update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
