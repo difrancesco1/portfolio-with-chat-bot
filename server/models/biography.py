@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID
 from typing import TYPE_CHECKING
@@ -25,6 +25,8 @@ class Biography(Base):
         default=uuid.uuid4,
         index=True
     )
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    
     bullet_points: Mapped[list["BiographyBulletPoint"]] = relationship(
         back_populates="biography",
         cascade="all, delete-orphan",

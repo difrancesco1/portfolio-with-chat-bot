@@ -56,7 +56,8 @@ class PortfolioService:
     async def add_biography(self, portfolio_pid: uuid.UUID, bio_data: BiographyCreate) -> Biography:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         biography = await self.repository.writes.add_biography(
-            portfolio_id=portfolio.id
+            portfolio_id=portfolio.id,
+            data=bio_data
         )
         await self.session.flush()
         for bp_create in bio_data.content:
@@ -98,6 +99,18 @@ class PortfolioService:
         )
         return bio_bp
 
+    async def add_document(
+        self, portfolio_pid: uuid.UUID, file_name: str, content_type: str, data: bytes
+    ) -> Document:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        doc = await self.repository.writes.add_document(
+            portfolio_id=portfolio.id,
+            file_name=file_name,
+            content_type=content_type,
+            data=data
+        )
+        return doc
+    
     async def add_education(self, portfolio_pid: uuid.UUID, edu_data: EducationCreate) -> Education:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
 
@@ -487,6 +500,16 @@ class PortfolioService:
     async def get_biography_all(self, portfolio_pid: uuid.UUID) -> list[Biography]:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         return await self.repository.queries.get_biography_all(portfolio.id)
+    
+    async def get_document(self, portfolio_pid: uuid.UUID, doc_pid: uuid.UUID) -> Document:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        doc = await self.repository.queries.get_document_by_pid(
+            portfolio_pid=portfolio.id,
+            doc_pid=doc_pid
+        )
+        if not doc:
+            raise ValueError("Document doesn't exist")
+        return doc
     
     async def get_education_all(self, portfolio_pid: uuid.UUID) -> list[Education]:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)

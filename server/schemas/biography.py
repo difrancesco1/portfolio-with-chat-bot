@@ -5,9 +5,11 @@ from typing import Optional
 # Relative
 from .config import BaseConfig, OutputConfig, InputConfig
 from .bullet_point import BulletPointCreate, BiographyBulletPointResponse
+from .types import TextField
 
 # Biography
 class BiographyBase(BaseConfig, BaseModel):
+    description: TextField
     pass
 
 class BiographyResponse(OutputConfig, BiographyBase):
