@@ -1,12 +1,13 @@
 import uuid
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from schemas import (
     BiographyResponse,
     BiographyCreate,
     BulletPointCreate,
     BulletPointResponse,
     BiographyBulletPointResponse,
+    DocumentResponse,
     EducationCreate,
     EducationResponse,
     EducationBulletPointResponse,
@@ -68,7 +69,25 @@ async def add_biography_bullet_point(
         )
     except ValueError as error:
         raise HTTPException(status_code=500, detail=str(error))
-    
+
+@admin_router.post("/{portfolio_pid}/add/document", response_model=DocumentResponse)
+async def add_document(
+    portfolio_pid: uuid.UUID,
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_db)
+):
+    data = await file.read()
+    service = PortfolioService(db)
+    try:
+        return await service.add_document(
+            portfolio_pid=portfolio_pid,
+            file_name=file.filename,
+            content_type=file.content_type,
+            data=data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
 @admin_router.post("/{portfolio_pid}/add/education", response_model=EducationResponse)
 async def add_education(
     portfolio_pid: uuid.UUID,
