@@ -1,8 +1,11 @@
 import uuid
+import io
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi.responses import StreamingResponse
 from schemas import (
     BiographyResponse,
+    DocumentResponse,
     EducationResponse,
     EmploymentResponse,
     ExperienceResponse,
@@ -44,7 +47,30 @@ async def get_biography(
         return await service.get_biography(portfolio_pid=portfolio_pid)
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))
-        
+
+@router.get("/{portfolio_pid}/document/{document_pid}")
+async def get_document(
+    portfolio_pid: uuid.UUID,
+    doc_pid: uuid.UUID,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        doc = await service.get_document(
+            portfolio_pid=portfolio_pid,
+            doc_pid=doc_pid
+        )
+        return StreamingResponse(
+            io.BytesIO(doc.data),
+            media_type=doc.content_type,
+            headers= {
+                "Content-Disposition": f'"attachment; filename="{doc.filename}"'
+            },
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
 @router.get("/{portfolio_pid}/education/all", response_model=list[EducationResponse])
 async def get_all_educations(
     portfolio_pid: uuid.UUID,

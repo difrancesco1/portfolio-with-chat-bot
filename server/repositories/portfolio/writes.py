@@ -44,9 +44,12 @@ class PortfolioWrites:
         self.session.add(portfolio)
         return portfolio
     
-    async def add_biography(self, portfolio_id: int) -> Biography:
+    async def add_biography(
+        self, portfolio_id: int, data: BiographyCreate
+    ) -> Biography:
         biography = Biography(
-            portfolio_id=portfolio_id
+            portfolio_id=portfolio_id,
+            decription=data.description
         )
         self.session.add(biography)
         return biography
