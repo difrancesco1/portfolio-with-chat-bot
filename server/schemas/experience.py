@@ -4,7 +4,7 @@ from typing import Optional
 
 # Relative
 from .config import BaseConfig, OutputConfig, InputConfig
-from .bullet_point import BulletPointCreate, ExperienceBulletPointResponse
+from .bullet_point import BulletPointCreate, ExperienceBulletPointResponse, ExperienceBulletPointBase
 from .types import EndDateField, StartDateField, StringField
 
 # Experience
@@ -18,4 +18,13 @@ class ExperienceResponse(OutputConfig, ExperienceBase):
     pid: uuid.UUID = Field(..., alias="experiencePid")
 
 class ExperienceCreate(InputConfig, ExperienceBase):
-    bullet_points: Optional[list[BulletPointCreate]] = Field(alias="content")
+    bullet_points: list[BulletPointCreate] | None = Field(alias="content", default=None)
+
+class ExperienceUpdate(BaseConfig, InputConfig, BaseModel):
+    title: StringField | None = None
+    start_date: StartDateField | None = None
+    end_date: EndDateField | None = None
+    bullet_points: list[ExperienceBulletPointBase] | None = Field(
+        default=None, 
+        alias="content"
+    )

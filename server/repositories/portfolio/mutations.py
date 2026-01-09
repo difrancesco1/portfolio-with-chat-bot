@@ -20,8 +20,11 @@ from schemas import (
     BiographyUpdate,
     BulletPointCreate,
     EducationCreate,
+    EducationUpdate,
     EmploymentCreate,
+    EmploymentUpdate,
     ExperienceCreate,
+    ExperienceUpdate,
     TagCreate,
     LinkCreate,
 )
@@ -204,6 +207,93 @@ class PortfolioMutations:
             raise ValueError(f"No row for bullet point ({tag.id}) exists")
         
     async def update_biography(
-        self, biography: Biography, bio_data: BiographyUpdate
-    ):
-        pass
+        self, biography: Biography, update_data: BiographyUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"bullet_points"},
+            exclude_unset=True
+        )
+        if "description" in data:
+            biography.description = data["description"]
+        
+        if update_data.bullet_points is not None:
+            for bio_bp in update_data.bullet_points:
+                bp = await self.queries.get_bullet_point_by_pid(
+                    bp_pid=bio_bp.bullet_point.pid
+                )
+                bp.content = bio_bp.bullet_point.content
+                association = await self.queries.get_biography_bullet_point(
+                    biography_id=biography.id,
+                    bullet_point_id=bp.id
+                )
+                association.position = bio_bp.position
+
+    async def update_education(
+        self, education: Education, update_data: EducationUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"bullet_points"},
+            exclude_unset=True
+        )
+        for key, value in data.items():
+            setattr(education, key, value)
+
+        if update_data.bullet_points is not None:
+            for edu_bp in update_data.bullet_points:
+                bp = await self.queries.get_bullet_point_by_pid(
+                    bp_pid=edu_bp.bullet_point.pid
+                )
+                bp.content = edu_bp.bullet_point.content
+                association = await self.queries.get_education_bullet_point(
+                    education_id=education.id,
+                    bullet_point_id=bp.id
+                )
+                association.position = edu_bp.position
+
+
+    async def update_employment(
+        self, employment: Employment, update_data: EmploymentUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"bullet_points"},
+            exclude_unset=True
+        )
+        for key, value in data.items():
+            setattr(employment, key, value)
+        if update_data.bullet_points is not None:
+            for emp_bp in update_data.bullet_points:
+                bp = await self.queries.get_bullet_point_by_pid(
+                    bp_pid=emp_bp.bullet_point.pid
+                )
+                bp.content = emp_bp.bullet_point.content
+                association = await self.queries.get_employment_bullet_point(
+                    employment_id=employment.id,
+                    bullet_point_id=bp.id
+                )
+                association.position = emp_bp.position
+
+
+    async def update_experience(
+        self, experience: Experience, update_data: ExperienceUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"bullet_points"},
+            exclude_unset=True
+        )
+        for key, value in data.items():
+            setattr(experience, key, value)
+        if update_data.bullet_points is not None:
+            for exp_bp in update_data.bullet_points:
+                bp = await self.queries.get_bullet_point_by_pid(
+                    bp_pid=exp_bp.bullet_point.pid
+                )
+                bp.content = exp_bp.bullet_point.content
+                association = await self.queries.get_experience_bullet_point(
+                    experience_id=experience.id,
+                    bullet_point_id=bp.id
+                )
+                association.position = exp_bp.position

@@ -28,14 +28,23 @@ class BiographyBulletPointBase(BaseConfig, BaseModel):
 class BiographyBulletPointResponse(OutputConfig, BiographyBulletPointBase):
     pass
 
-class EducationBulletPointResponse(OutputConfig, BaseModel):
+class EducationBulletPointBase(BaseConfig, BaseModel):
     position: PositiveInt
     bullet_point: BulletPointResponse
 
-class EmploymentBulletPointResponse(OutputConfig, BaseModel):
+class EducationBulletPointResponse(OutputConfig, EducationBulletPointBase):
+    pass
+
+class EmploymentBulletPointBase(BaseConfig, BaseModel):
     position: PositiveInt
     bullet_point: BulletPointResponse
 
-class ExperienceBulletPointResponse(OutputConfig, BaseModel):
+class EmploymentBulletPointResponse(OutputConfig, EmploymentBulletPointBase):
+    pass
+
+class ExperienceBulletPointBase(BaseConfig, BaseModel):
     position: PositiveInt
     bullet_point: BulletPointResponse
+
+class ExperienceBulletPointResponse(OutputConfig, ExperienceBulletPointBase):
+    pass

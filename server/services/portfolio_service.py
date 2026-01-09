@@ -20,8 +20,11 @@ from schemas import (
     BiographyUpdate,
     BulletPointCreate,
     EducationCreate,
+    EducationUpdate,
     EmploymentCreate,
+    EmploymentUpdate,
     ExperienceCreate,
+    ExperienceUpdate,
     PortfolioCreate,
     ProjectCreate,
 )
@@ -61,16 +64,18 @@ class PortfolioService:
             data=bio_data
         )
         await self.session.flush()
-        for bp_create in bio_data.content:
+        for bp_create in bio_data.bullet_points:
             if bp_create.parent_type != BulletPointType.BIOGRAPHY:
                 raise ValueError(f"Invalid bullet point type ({bp_create.parent_type}). Has to be of type Biography")
             bio_bp = await self.repository.mutations.add_biography_bullet_point(
                 bp_data=bp_create,
                 biography=biography
             )
-            biography.bullet_points.append(bio_bp)
         await self.session.commit()
-        return biography
+        return await self.repository.queries.get_biography_by_pid(
+            portfolio_id=portfolio.id,
+            biography_pid=biography.pid
+        )
     
     async def add_biography_bullet_point(
         self, portfolio_pid: uuid.UUID, biography_pid: uuid.UUID, bp_data: BulletPointCreate
@@ -586,20 +591,89 @@ class PortfolioService:
         return portfolio
     
     async def update_biography(
-        self, portfolio_pid: uuid.UUID, biography_pid: uuid.UUID, bio_data: BiographyUpdate
+        self, portfolio_pid: uuid.UUID, biography_pid: uuid.UUID, update_data: BiographyUpdate
     ) -> Biography:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         biography = await self.repository.queries.get_biography_by_pid(
             portfolio_id=portfolio.id,
             biography_pid=biography_pid
         )
+        if not biography:
+            raise ValueError("Biography doesn't exist")
+        
         await self.repository.mutations.update_biography(
             biography=biography,
-            bio_data=bio_data
+            update_data=update_data
         )
-        await self.session.flush()
+        await self.session.commit()
         
         return await self.repository.queries.get_biography_by_pid(
             portfolio_id=portfolio.id,
             biography_pid=biography_pid
+        )
+    
+    async def update_education(
+        self, portfolio_pid: uuid.UUID, education_pid: uuid.UUID, update_data: EducationUpdate
+    ) -> Education:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        education = await self.repository.queries.get_education_by_pid(
+            portfolio_id=portfolio.id,
+            education_pid=education_pid
+        )
+        if not education:
+            raise ValueError("Education doesn't exist")
+        
+        await self.repository.mutations.update_education(
+            education=education,
+            update_data=update_data
+        )
+        await self.session.commit()
+        
+        return await self.repository.queries.get_education_by_pid(
+            portfolio_id=portfolio.id,
+            education_pid=education_pid
+        )
+    
+    async def update_employment(
+        self, portfolio_pid: uuid.UUID, employment_pid: uuid.UUID, update_data: EmploymentUpdate
+    ) -> Employment:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        employment = await self.repository.queries.get_employment_by_pid(
+            portfolio_id=portfolio.id,
+            employment_pid=employment_pid
+        )
+        if not employment:
+            raise ValueError("Employment doesn't exist")
+        
+        await self.repository.mutations.update_employment(
+            employment=employment,
+            update_data=update_data
+        )
+        await self.session.commit()
+        
+        return await self.repository.queries.get_employment_by_pid(
+            portfolio_id=portfolio.id,
+            employment_pid=employment_pid
+        )
+    
+    async def update_experience(
+        self, portfolio_pid: uuid.UUID, experience_pid: uuid.UUID, update_data: ExperienceUpdate
+    ) -> Experience:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        experience = await self.repository.queries.get_experience_by_pid(
+            portfolio_id=portfolio.id,
+            experience_pid=experience_pid
+        )
+        if not experience:
+            raise ValueError("Experience doesn't exist")
+        
+        await self.repository.mutations.update_experience(
+            experience=experience,
+            update_data=update_data
+        )
+        await self.session.commit()
+        
+        return await self.repository.queries.get_experience_by_pid(
+            portfolio_id=portfolio.id,
+            experience_pid=experience_pid
         )

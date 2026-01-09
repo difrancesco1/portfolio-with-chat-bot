@@ -49,7 +49,7 @@ class PortfolioWrites:
     ) -> Biography:
         biography = Biography(
             portfolio_id=portfolio_id,
-            decription=data.description
+            description=data.description
         )
         self.session.add(biography)
         return biography
