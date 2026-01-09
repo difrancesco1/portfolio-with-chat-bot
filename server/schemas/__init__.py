@@ -14,15 +14,20 @@ from schemas.bullet_point import (
     BulletPointBase,
     BulletPointCreate,
     BulletPointResponse,
+    BiographyBulletPointBase,
     BiographyBulletPointResponse,
+    EducationBulletPointBase,
     EducationBulletPointResponse,
+    EmploymentBulletPointBase,
     EmploymentBulletPointResponse,
+    ExperienceBulletPointBase,
     ExperienceBulletPointResponse
 )
 from schemas.biography import (
     BiographyBase,
     BiographyCreate,
-    BiographyResponse
+    BiographyResponse,
+    BiographyUpdate
 )
 from schemas.document import (
     DocumentBase,
@@ -31,17 +36,20 @@ from schemas.document import (
 from schemas.education import (
     EducationBase,
     EducationCreate,
-    EducationResponse
+    EducationResponse,
+    EducationUpdate
 )
 from schemas.employment import (
     EmploymentBase,
     EmploymentCreate,
-    EmploymentResponse
+    EmploymentResponse,
+    EmploymentUpdate
 )
 from schemas.experience import (
     ExperienceBase,
     ExperienceCreate,
-    ExperienceResponse
+    ExperienceResponse,
+    ExperienceUpdate
 )
 from schemas.link import (
     LinkBase,
@@ -76,24 +84,32 @@ __all__ = [
     "BiographyBase",
     "BiographyCreate",
     "BiographyResponse",
+    "BiographyBulletPointBase",
+    "BiographyUpdate",
     "BulletPointBase",
     "BulletPointCreate",
     "BulletPointResponse",
     "BiographyBulletPointResponse",
+    "EducationBulletPointBase",
     "EducationBulletPointResponse",
+    "EmploymentBulletPointBase",
     "EmploymentBulletPointResponse",
+    "ExperienceBulletPointBase",
     "ExperienceBulletPointResponse",
     "DocumentBase",
     "DocumentResponse",
     "EducationBase",
     "EducationCreate",
     "EducationResponse",
+    "EducationUpdate",
     "EmploymentBase",
     "EmploymentCreate",
     "EmploymentResponse",
+    "EmploymentUpdate",
     "ExperienceBase",
     "ExperienceCreate",
     "ExperienceResponse",
+    "ExperienceUpdate",
     "LinkBase",
     "LinkCreate",
     "LinkResponse",
@@ -105,6 +121,7 @@ __all__ = [
     "PortfolioEducationResponse",
     "PortfolioEmploymentResponse",
     "PortfolioExperienceResponse",
+    "PositiveInt",
     "ProjectBase",
     "ProjectCreate",
     "ProjectResponse",

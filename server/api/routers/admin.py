@@ -4,18 +4,22 @@ from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from schemas import (
     BiographyResponse,
     BiographyCreate,
+    BiographyUpdate,
     BulletPointCreate,
     BulletPointResponse,
     BiographyBulletPointResponse,
     DocumentResponse,
     EducationCreate,
     EducationResponse,
+    EducationUpdate,
     EducationBulletPointResponse,
     EmploymentCreate,
     EmploymentResponse,
+    EmploymentUpdate,
     EmploymentBulletPointResponse,
     ExperienceCreate,
     ExperienceResponse,
+    ExperienceUpdate,
     ExperienceBulletPointResponse,
     PortfolioCreate,
     PortfolioResponse,
@@ -353,3 +357,71 @@ async def delete_portfolio_project(
         )
     except ValueError as error:
         raise HTTPException(status_code=404, detail=str(error))
+    
+@admin_router.patch("/{portfolio_pid}/update/biography/{biography_pid}", response_model=BiographyResponse)
+async def update_biography(
+    portfolio_pid: uuid.UUID,
+    biography_pid: uuid.UUID,
+    update_data: BiographyUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_biography(
+            portfolio_pid=portfolio_pid,
+            biography_pid=biography_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    
+@admin_router.patch("/{portfolio_pid}/update/education/{education_pid}", response_model=EducationResponse)
+async def update_education(
+    portfolio_pid: uuid.UUID,
+    education_pid: uuid.UUID,
+    update_data: EducationUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_education(
+            portfolio_pid=portfolio_pid,
+            education_pid=education_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    
+@admin_router.patch("/{portfolio_pid}/update/employment/{employment_pid}", response_model=EmploymentResponse)
+async def update_employment(
+    portfolio_pid: uuid.UUID,
+    employment_pid: uuid.UUID,
+    update_data: EmploymentUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_employment(
+            portfolio_pid=portfolio_pid,
+            employment_pid=employment_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    
+@admin_router.patch("/{portfolio_pid}/update/experience/{experience_pid}", response_model=ExperienceResponse)
+async def update_experience(
+    portfolio_pid: uuid.UUID,
+    experience_pid: uuid.UUID,
+    update_data: ExperienceUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_experience(
+            portfolio_pid=portfolio_pid,
+            experience_pid=experience_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
