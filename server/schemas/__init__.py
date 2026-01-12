@@ -69,7 +69,8 @@ from schemas.portfolio import (
 from schemas.project import (
     ProjectBase,
     ProjectCreate,
-    ProjectResponse
+    ProjectResponse,
+    ProjectUpdate
 )
 from schemas.tag import (
     TagBase,
@@ -125,6 +126,7 @@ __all__ = [
     "ProjectBase",
     "ProjectCreate",
     "ProjectResponse",
+    "ProjectUpdate",
     "TagBase",
     "TagCreate",
     "TagResponse",

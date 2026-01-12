@@ -24,7 +24,8 @@ from schemas import (
     PortfolioCreate,
     PortfolioResponse,
     ProjectResponse,
-    ProjectCreate
+    ProjectCreate,
+    ProjectUpdate
 )
 from services.portfolio_service import PortfolioService
 from database.session import get_db
@@ -421,6 +422,24 @@ async def update_experience(
         return await service.update_experience(
             portfolio_pid=portfolio_pid,
             experience_pid=experience_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+
+@admin_router.patch("/{portfolio_pid}/update/project/{project_pid}", response_model=ProjectResponse)
+async def update_project(
+    portfolio_pid: uuid.UUID,
+    project_pid: uuid.UUID,
+    update_data: ProjectUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_project(
+            portfolio_pid=portfolio_pid,
+            project_pid=project_pid,
             update_data=update_data
         )
     except ValueError as error:

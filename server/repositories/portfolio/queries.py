@@ -12,8 +12,10 @@ from models import (
     EmploymentBulletPoint,
     Experience,
     ExperienceBulletPoint,
+    Link,
     Portfolio,
-    Project
+    Project,
+    Tag
 )
 from .loaders import (
     BIOGRAPHY_WITH_BULLETS,
@@ -170,6 +172,11 @@ class PortfolioQueries:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
     
+    async def get_link_by_pid(self, link_pid:uuid.UUID) -> Link | None:
+        stmt = select(Link).where(Link.pid == link_pid)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+    
     async def get_portfolio_by_email(self, email: str) -> Portfolio | None:
         stmt = select(Portfolio).where(Portfolio.email == email)
         result = await self.session.execute(stmt)
@@ -187,5 +194,10 @@ class PortfolioQueries:
             Project.portfolio_id == portfolio_id,
             Project.pid == project_pid
         ).options(*PROJECT_FULL)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+    
+    async def get_tag_by_pid(self, tag_pid: uuid.UUID) -> Tag | None:
+        stmt = select(Tag).where(Tag.pid == tag_pid)
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()

@@ -27,6 +27,7 @@ from schemas import (
     ExperienceUpdate,
     PortfolioCreate,
     ProjectCreate,
+    ProjectUpdate
 )
 from repositories.portfolio import PortfolioRepository
 
@@ -676,4 +677,25 @@ class PortfolioService:
         return await self.repository.queries.get_experience_by_pid(
             portfolio_id=portfolio.id,
             experience_pid=experience_pid
+        )
+    
+    async def update_project(
+        self, portfolio_pid: uuid.UUID, project_pid: uuid.UUID, update_data: ProjectUpdate
+    ):
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        project = await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
+        )
+        if not project:
+            raise ValueError("Project doesn't exist")
+        await self.repository.mutations.update_project(
+            project=project,
+            update_data=update_data
+        )
+        await self.session.commit()
+
+        return await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
         )

@@ -15,5 +15,8 @@ class LinkResponse(OutputConfig, LinkBase):
 class LinkCreate(InputConfig, LinkBase):
     pass
 
-class ProjectLinkResponse(OutputConfig, BaseModel):
+class ProjectLinkBase(BaseConfig, BaseModel):
     link: LinkResponse
+
+class ProjectLinkResponse(OutputConfig, ProjectLinkBase):
+    pass
