@@ -27,6 +27,7 @@ from schemas import (
     ExperienceUpdate,
     TagCreate,
     LinkCreate,
+    ProjectUpdate
 )
 # Relative
 from .writes import PortfolioWrites
@@ -252,7 +253,6 @@ class PortfolioMutations:
                 )
                 association.position = edu_bp.position
 
-
     async def update_employment(
         self, employment: Employment, update_data: EmploymentUpdate
     ) -> None:
@@ -275,7 +275,6 @@ class PortfolioMutations:
                 )
                 association.position = emp_bp.position
 
-
     async def update_experience(
         self, experience: Experience, update_data: ExperienceUpdate
     ) -> None:
@@ -297,3 +296,27 @@ class PortfolioMutations:
                     bullet_point_id=bp.id
                 )
                 association.position = exp_bp.position
+
+    async def update_project(
+        self, project: Project, update_data: ProjectUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"tags", "links"},
+            exclude_unset=True
+        )
+        for key, value in data.items():
+            setattr(project, key, value)
+        if update_data.links is not None:
+            for proj_link in update_data.links:
+                link = await self.queries.get_link_by_pid(
+                    link_pid=proj_link.link.pid
+                )
+                link.url = proj_link.link.url
+                link.platform = proj_link.link.platform
+        if update_data.tags is not None:
+            for proj_tag in update_data.tags:
+                tag = await self.queries.get_tag_by_pid(
+                    tag_pid=proj_tag.tag.pid
+                )
+                tag.tag = proj_tag.tag.tag        

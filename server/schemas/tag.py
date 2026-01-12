@@ -14,5 +14,8 @@ class TagResponse(OutputConfig, TagBase):
 class TagCreate(InputConfig, TagBase):
     pass
 
-class ProjectTagResponse(OutputConfig, BaseModel):
+class ProjectTagBase(BaseConfig, BaseModel):
     tag: TagResponse
+
+class ProjectTagResponse(OutputConfig, ProjectTagBase):
+    pass
