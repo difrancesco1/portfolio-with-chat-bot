@@ -177,6 +177,13 @@ class PortfolioQueries:
         result = await self.session.execute(stmt)
         return result.scalar_one_or_none()
     
+    async def get_portfolio_by_pid(self, portfolio_pid: uuid.UUID) -> Portfolio | None:
+        stmt = select(Portfolio).where(
+            Portfolio.pid == portfolio_pid
+        ).options(*PORTFOLIO_FULL)
+        result = await self.session.execute(stmt)
+        return result.scalar_one_or_none()
+    
     async def get_portfolio_by_email(self, email: str) -> Portfolio | None:
         stmt = select(Portfolio).where(Portfolio.email == email)
         result = await self.session.execute(stmt)

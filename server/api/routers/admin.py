@@ -21,11 +21,15 @@ from schemas import (
     ExperienceResponse,
     ExperienceUpdate,
     ExperienceBulletPointResponse,
+    LinkCreate,
     PortfolioCreate,
     PortfolioResponse,
+    PortfolioFullResponse,
+    PortfolioUpdate,
     ProjectResponse,
     ProjectCreate,
-    ProjectUpdate
+    ProjectUpdate,
+    TagCreate
 )
 from services.portfolio_service import PortfolioService
 from database.session import get_db
@@ -191,6 +195,21 @@ async def add_experience_bullet_point(
     except ValueError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+@admin_router.post("/{portfolio_pid}/add/link", response_model=PortfolioFullResponse)
+async def add_portfolio_link(
+    portfolio_pid: uuid.UUID,
+    link_data: LinkCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.add_portfolio_link(
+            portfolio_pid=portfolio_pid,
+            link_data=link_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    
 @admin_router.post("/{portfolio_pid}/add/project", response_model=ProjectResponse)
 async def add_project(
     portfolio_pid: uuid.UUID,
@@ -205,7 +224,41 @@ async def add_project(
         )
     except ValueError as error:
         raise HTTPException(status_code=400, details=str(error))
-    
+
+@admin_router.post("/{portfolio_pid}/add/project/{project_pid}/link", response_model=ProjectResponse)
+async def add_project_link(
+    portfolio_pid: uuid.UUID,
+    project_pid: uuid.UUID,
+    link_data: LinkCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.add_project_link(
+            portfolio_pid=portfolio_pid,
+            project_pid=project_pid,
+            link_data=link_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+@admin_router.post("/{portfolio_pid}/add/project/{project_pid}/tag", response_model=ProjectResponse)
+async def add_project_tag(
+    portfolio_pid: uuid.UUID,
+    project_pid: uuid.UUID,
+    tag_data: TagCreate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.add_project_tag(
+            portfolio_pid=portfolio_pid,
+            project_pid=project_pid,
+            tag_data=tag_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+     
 @admin_router.post("/create/portfolio", response_model=PortfolioResponse)
 async def create_portfolio(
     data: PortfolioCreate,
@@ -427,6 +480,20 @@ async def update_experience(
     except ValueError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+@admin_router.patch("/{portfolio_pid}/update/portfolio", response_model=PortfolioFullResponse)
+async def update_portfolio(
+    portfolio_pid: uuid.UUID,
+    update_data: PortfolioUpdate,
+    db: AsyncSession = Depends(get_db)
+):
+    service = PortfolioService(db)
+    try:
+        return await service.update_portfolio(
+            portfolio_pid=portfolio_pid,
+            update_data=update_data
+        )
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
 
 @admin_router.patch("/{portfolio_pid}/update/project/{project_pid}", response_model=ProjectResponse)
 async def update_project(

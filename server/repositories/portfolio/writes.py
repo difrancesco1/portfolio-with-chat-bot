@@ -14,6 +14,7 @@ from models import (
     ExperienceBulletPoint,
     Link,
     Portfolio,
+    PortfolioLink,
     Project,
     ProjectLink,
     ProjectTag,
@@ -166,6 +167,16 @@ class PortfolioWrites:
         )
         self.session.add(link)
         return link
+    
+    async def add_portfolio_link(
+        self, portfolio_id: int, link_id: int
+    ) -> PortfolioLink | None:
+        portfolio_link = PortfolioLink(
+            portfolio_id=portfolio_id,
+            link_id=link_id
+        )
+        self.session.add(portfolio_link)
+        return portfolio_link
     
     async def add_project(
         self, portfolio_id: int, project_data: ProjectCreate

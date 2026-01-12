@@ -54,7 +54,11 @@ from schemas.experience import (
 from schemas.link import (
     LinkBase,
     LinkCreate,
-    LinkResponse
+    LinkResponse,
+    PortfolioLinkBase,
+    PortfolioLinkResponse,
+    ProjectLinkBase,
+    ProjectLinkResponse
 )
 from schemas.portfolio import (
     PortfolioBase,
@@ -64,7 +68,8 @@ from schemas.portfolio import (
     PortfolioBiographyResponse,
     PortfolioEducationResponse,
     PortfolioEmploymentResponse,
-    PortfolioExperienceResponse
+    PortfolioExperienceResponse,
+    PortfolioUpdate
 )
 from schemas.project import (
     ProjectBase,
@@ -122,11 +127,16 @@ __all__ = [
     "PortfolioEducationResponse",
     "PortfolioEmploymentResponse",
     "PortfolioExperienceResponse",
+    "PortfolioLinkBase",
+    "PortfolioLinkResponse",
+    "ProjectLinkBase",
+    "ProjectLinkResponse",
     "PositiveInt",
     "ProjectBase",
     "ProjectCreate",
     "ProjectResponse",
     "ProjectUpdate",
+    "PortfolioUpdate",
     "TagBase",
     "TagCreate",
     "TagResponse",

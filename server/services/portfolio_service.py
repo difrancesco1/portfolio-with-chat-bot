@@ -25,9 +25,12 @@ from schemas import (
     EmploymentUpdate,
     ExperienceCreate,
     ExperienceUpdate,
+    LinkCreate,
     PortfolioCreate,
+    PortfolioUpdate,
     ProjectCreate,
-    ProjectUpdate
+    ProjectUpdate,
+    TagCreate
 )
 from repositories.portfolio import PortfolioRepository
 
@@ -51,6 +54,9 @@ class PortfolioService:
         await self.session.commit()
         return
     
+    async def debug_all_links(self):
+        return await self.repository.debug.get_all_links()
+        
     """ **************************************************************************** """
     async def get_portfolio_by_pid(self, portfolio_pid: uuid.UUID) -> Portfolio:
         portfolio = await self.repository.queries.get_by_pid(portfolio_pid)
@@ -257,6 +263,15 @@ class PortfolioService:
             bullet_point_id=emp_bp.bullet_point_id
         )
     
+    async def add_portfolio_link(self, portfolio_pid: uuid.UUID, link_data: LinkCreate) -> Portfolio:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        await self.repository.mutations.add_portfolio_link(
+            portfolio=portfolio,
+            link_data=link_data
+        )
+        await self.session.commit()
+        return await self.repository.queries.get_portfolio_by_pid(portfolio_pid)
+    
     async def add_project(self, portfolio_pid: uuid.UUID, project_data: ProjectCreate) -> Project:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         
@@ -285,6 +300,50 @@ class PortfolioService:
             project_pid=project.pid
         )
     
+    async def add_project_link(
+        self, portfolio_pid: uuid.UUID, project_pid: uuid.UUID, link_data: LinkCreate
+    ) -> Project:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        project = await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
+        )
+        if not project:
+            raise ValueError("Project doesn't exist")
+        proj_link = await self.repository.mutations.add_project_link(
+            project=project,
+            link_data=link_data
+        )
+        if not proj_link:
+            raise ValueError("Project link add error")
+        await self.session.commit()
+        return await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
+        )
+
+    async def add_project_tag(
+        self, portfolio_pid: uuid.UUID, project_pid: uuid.UUID, tag_data: TagCreate
+    ) -> Project:
+        portfolio = await self.get_portfolio_by_pid(portfolio_pid)
+        project = await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
+        )
+        if not project:
+            raise ValueError("Project doesn't exist")
+        proj_tag = await self.repository.mutations.add_project_tag(
+            project=project,
+            tag_data=tag_data
+        )
+        if not proj_tag:
+            raise ValueError("Project tag add error")
+        await self.session.commit()
+        return await self.repository.queries.get_project_by_pid(
+            portfolio_id=portfolio.id,
+            project_pid=project_pid
+        )
+      
     async def delete_portfolio(self, portfolio_pid: uuid.UUID) -> None:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         await self.repository.writes.delete_portfolio(portfolio)
@@ -679,9 +738,20 @@ class PortfolioService:
             experience_pid=experience_pid
         )
     
+    async def update_portfolio(
+        self, portfolio_pid: uuid.UUID, update_data: PortfolioUpdate
+    ) -> Portfolio:
+        portfolio = await self.repository.queries.get_portfolio_by_pid(portfolio_pid)
+        await self.repository.mutations.update_portfolio(
+            portfolio=portfolio,
+            update_data=update_data
+        )
+        await self.session.commit()
+        return await self.repository.queries.get_portfolio_by_pid(portfolio_pid)
+    
     async def update_project(
         self, portfolio_pid: uuid.UUID, project_pid: uuid.UUID, update_data: ProjectUpdate
-    ):
+    ) -> Project:
         portfolio = await self.get_portfolio_by_pid(portfolio_pid)
         project = await self.repository.queries.get_project_by_pid(
             portfolio_id=portfolio.id,

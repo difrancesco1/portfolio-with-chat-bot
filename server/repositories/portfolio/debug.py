@@ -10,6 +10,7 @@ from models import (
     Education,
     Employment,
     Experience,
+    Link,
     Portfolio
 )
 from .loaders import BIOGRAPHY_WITH_BULLETS
@@ -30,6 +31,11 @@ class PortfolioDebug:
     
     async def get_all_bp(self):
         stmt = select(BulletPoint)
+        result = await self.session.execute(stmt)
+        return result.scalars().all()
+    
+    async def get_all_links(self):
+        stmt = select(Link)
         result = await self.session.execute(stmt)
         return result.scalars().all()
     

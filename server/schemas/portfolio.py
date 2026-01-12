@@ -8,7 +8,7 @@ from .document import DocumentResponse
 from .education import EducationResponse
 from .employment import EmploymentResponse
 from .experience import ExperienceResponse
-from .link import LinkResponse
+from .link import PortfolioLinkBase, PortfolioLinkResponse
 from .project import ProjectResponse
 
 # Portfolio
@@ -51,5 +51,21 @@ class PortfolioFullResponse(PortfolioResponse):
     education: list[EducationResponse]
     employment: list[EmploymentResponse]
     experiences: list[ExperienceResponse]
-    links: list[LinkResponse]
+    links: list[PortfolioLinkResponse]
     projects: list[ProjectResponse]
+
+class PortfolioUpdate(BaseConfig, InputConfig, BaseModel):
+    email: EmailStr | None = None
+    first_name: str | None = Field(
+        default=None,
+        alias="firstName",
+        min_length=1,
+        max_length=64
+    )
+    last_name: str | None = Field(
+        default=None, 
+        alias="lastName",
+        min_length=1,
+        max_length=64
+    )
+    links: list[PortfolioLinkBase] | None = None
