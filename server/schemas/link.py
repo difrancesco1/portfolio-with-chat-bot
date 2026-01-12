@@ -15,6 +15,12 @@ class LinkResponse(OutputConfig, LinkBase):
 class LinkCreate(InputConfig, LinkBase):
     pass
 
+class PortfolioLinkBase(BaseConfig, BaseModel):
+    link: LinkResponse
+
+class PortfolioLinkResponse(OutputConfig, PortfolioLinkBase):
+    pass
+
 class ProjectLinkBase(BaseConfig, BaseModel):
     link: LinkResponse
 

@@ -13,6 +13,7 @@ from schemas import (
     EmploymentResponse,
     ExperienceCreate,
     ExperienceResponse,
+    LinkResponse,
     PortfolioCreate,
     PortfolioResponse,
 )
@@ -50,5 +51,13 @@ async def clear_all_bullet_points(db: AsyncSession = Depends(get_db)):
     service = PortfolioService(db)
     try:
         return await service.debug_clear_bp_tables()
+    except ValueError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    
+@debug_router.get("/all/links", response_model=list[LinkResponse])
+async def get_all_links(db: AsyncSession = Depends(get_db)):
+    service = PortfolioService(db)
+    try:
+        return await service.debug_all_links()
     except ValueError as error:
         raise HTTPException(status_code=500, detail=str(error))

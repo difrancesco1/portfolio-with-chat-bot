@@ -12,7 +12,10 @@ from models import (
     ExperienceBulletPoint,
     Link,
     Portfolio,
+    PortfolioLink,
     Project,
+    ProjectLink,
+    ProjectTag,
     Tag
 )
 from schemas import (
@@ -27,6 +30,7 @@ from schemas import (
     ExperienceUpdate,
     TagCreate,
     LinkCreate,
+    PortfolioUpdate,
     ProjectUpdate
 )
 # Relative
@@ -99,9 +103,22 @@ class PortfolioMutations:
         )
         return exp_bp
     
+    async def add_portfolio_link(
+        self, portfolio: Portfolio, link_data: LinkCreate
+    ) -> PortfolioLink:
+        link = await self.writes.add_link(
+            link_data=link_data
+        )
+        await self.session.flush()
+        portfolio_link = await self.writes.add_portfolio_link(
+            portfolio_id=portfolio.id,
+            link_id=link.id
+        )
+        return portfolio_link
+    
     async def add_project_link(
         self, project: Project, link_data: LinkCreate
-    ) -> Link:
+    ) -> ProjectLink:
         link = await self.writes.add_link(
             link_data=link_data
         )
@@ -115,7 +132,7 @@ class PortfolioMutations:
     
     async def add_project_tag(
         self, project: Project, tag_data: TagCreate
-    ) -> Tag:
+    ) -> ProjectTag:
         tag = await self.writes.add_tag(
             tag_data=tag_data
         )
@@ -297,6 +314,24 @@ class PortfolioMutations:
                 )
                 association.position = exp_bp.position
 
+    async def update_portfolio(
+        self, portfolio: Portfolio, update_data: PortfolioUpdate
+    ) -> None:
+        data = update_data.model_dump(
+            by_alias=False,
+            exclude={"links"},
+            exclude_unset=True
+        )
+        for key, value in data.items():
+            setattr(portfolio, key, value)
+        if update_data.links is not None:
+            for portfolio_link in update_data.links:
+                link = await self.queries.get_link_by_pid(
+                    link_pid=portfolio_link.link.pid
+                )
+                link.url = portfolio_link.link.url
+                link.platform = portfolio_link.link.platform
+    
     async def update_project(
         self, project: Project, update_data: ProjectUpdate
     ) -> None:
